@@ -9,7 +9,7 @@
       />
       <div v-else>
         <i class="text-sm text-gray-400">
-          {{ plugin.name }} is not available
+          Component is not available
         </i>
       </div>
     </template>

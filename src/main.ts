@@ -2,17 +2,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import PluginEnvironment from './components/PluginEnvironment.vue';
+import type { PluginDevConfig } from './types';
 import './style.css';
-
-interface PluginDevConfig {
-  pluginConfig?: any;
-  components?: Record<string, any>;
-  importPaths?: {
-    configPath?: string;
-    sidebarPath?: string;
-    contentPath?: string;
-  };
-}
 
 function createPluginDevelopmentEnvironment(config: PluginDevConfig = {}) {
   const router = createRouter({

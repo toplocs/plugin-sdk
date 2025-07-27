@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-white dark:bg-black">
 
     <div class="mx-auto max-w-5xl">
-      <RouterView :key="$route.params.id" />
+      <RouterView :key="($route.params.id as string) || ''" />
     </div>
     
   </div>

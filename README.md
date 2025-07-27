@@ -1,225 +1,103 @@
-# TopLocs Plugin Development SDK
+# TopLocs Plugin SDK
 
-[![npm version](https://img.shields.io/npm/v/@toplocs/plugin-dev-sdk)](https://www.npmjs.com/package/@toplocs/plugin-dev-sdk)
-[![GitHub](https://img.shields.io/github/license/toplocs/plugin-dev-sdk)](https://github.com/toplocs/plugin-dev-sdk/blob/main/LICENSE)
+> Official SDK for developing plugins for the TopLocs decentralized community platform
 
-A comprehensive development SDK for TopLocs plugins, providing an interactive development environment with Vue 3, TypeScript, and module federation support.
+[![npm version](https://img.shields.io/npm/v/@toplocs/plugin-sdk.svg)](https://www.npmjs.com/package/@toplocs/plugin-sdk)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+The TopLocs Plugin SDK provides a complete development environment for building, testing, and deploying plugins for the TopLocs platform. It includes hot module reloading, TypeScript support, and a visual development environment that simulates the TopLocs plugin system.
 
 ## 🚀 Features
 
-- **🎯 Interactive Development Environment**: Entity/page selection with live component testing
-- **⚡ Hot Reload**: Real-time development with instant updates
-- **🧩 Module Federation**: Test federated plugin loading and component isolation
-- **🎨 Tailwind CSS**: Pre-configured styling with full design system
-- **📱 Responsive Design**: Mobile-first development environment
-- **🔧 TypeScript**: Full type safety and IntelliSense support
-- **🏗️ Entity/Page/Slot Architecture**: Support for TopLocs' plugin architecture
+- **🔥 Hot Module Reloading** - Instant feedback during development
+- **🧩 Module Federation** - Production-ready plugin architecture
+- **📦 TypeScript First** - Full type safety and IntelliSense support
+- **🎨 Tailwind CSS** - Pre-configured styling system
+- **🖼️ Visual Dev Environment** - See your plugin in context
+- **🔧 Zero Config** - Works out of the box
 
 ## 📦 Installation
 
-### For New Plugins
-
 ```bash
-# Install as dependency
-npm install git+https://github.com/toplocs/plugin-dev-sdk.git
-
-# Or with pnpm
-pnpm add git+https://github.com/toplocs/plugin-dev-sdk.git
+npm install @toplocs/plugin-sdk
+# or
+pnpm add @toplocs/plugin-sdk
+# or
+yarn add @toplocs/plugin-sdk
 ```
 
-### For Plugin Development
+## 🏁 Quick Start
 
-```bash
-# Clone and setup
-git clone https://github.com/toplocs/plugin-dev-sdk.git
-cd plugin-dev-sdk
-npm install
-npm run build
-```
-
-## 🎯 Quick Start
-
-### Basic Usage
+### 1. Create Your Plugin Structure
 
 ```typescript
-// index.ts - Your plugin's development entry point
-import { createPluginDevelopmentEnvironment, type PluginDevConfig } from '@toplocs/plugin-dev-sdk';
-import '@toplocs/plugin-dev-sdk/style.css';
+// dev.ts
+import { createPluginDevelopmentEnvironment } from '@toplocs/plugin-sdk';
+import pluginConfig from './plugin.config';
+import TopicContent from './components/TopicContent.vue';
+import TopicSidebar from './components/TopicSidebar.vue';
 
-// Import your plugin configuration and components
-import pluginConfig from './src/index';
-import SidebarComponent from './src/views/info/Sidebar.vue';
-import ContentComponent from './src/views/settings/Content.vue';
-
-// Configure the development environment
-const devConfig: PluginDevConfig = {
+const app = createPluginDevelopmentEnvironment({
   pluginConfig,
   components: {
-    Sidebar: SidebarComponent,
-    Content: ContentComponent
+    TopicContent,
+    TopicSidebar
   }
-};
+});
 
-// Create and mount the development environment
-const app = createPluginDevelopmentEnvironment(devConfig);
 app.mount('#app');
 ```
 
-### Plugin Configuration
-
-Your plugin should export a configuration object:
+### 2. Define Plugin Configuration
 
 ```typescript
-// src/index.ts - Plugin configuration
-export interface BasePluginConfig {
-  id: string;
-  name: string;
-  url: string;
-  version?: string;
-  description?: string;
-  author?: string;
-  slots: Array<PluginSlot>;
-}
+// plugin.config.ts
+import type { BasePluginConfig } from '@toplocs/plugin-sdk';
 
-export interface PluginSlot {
-  entity: 'Topic' | 'Location';    // Which entity type
-  page: 'Info' | 'Settings';       // Which page within the entity  
-  slot: 'Content' | 'Sidebar';     // Which slot on the page
-  component: string;                // Component name to load
-}
-
-const pluginConfig: BasePluginConfig = {
-  id: 'my_plugin',
-  name: 'My Plugin',
+const config: BasePluginConfig = {
+  id: 'my-awesome-plugin',
+  name: 'My Awesome Plugin',
   url: 'http://localhost:3006/assets/plugin.js',
   version: '1.0.0',
-  description: 'Description of my plugin',
+  description: 'Adds awesome features to TopLocs',
   author: 'Your Name',
   slots: [
-    { entity: 'Topic', page: 'Info', slot: 'Sidebar', component: 'Sidebar' },
-    { entity: 'Topic', page: 'Settings', slot: 'Content', component: 'Content' },
-    { entity: 'Location', page: 'Info', slot: 'Sidebar', component: 'Sidebar' },
-    { entity: 'Location', page: 'Settings', slot: 'Content', component: 'Content' }
+    {
+      entity: 'Topic',
+      page: 'Info',
+      slot: 'Content',
+      component: 'TopicContent'
+    },
+    {
+      entity: 'Topic',
+      page: 'Info', 
+      slot: 'Sidebar',
+      component: 'TopicSidebar'
+    }
   ]
 };
 
-export default pluginConfig;
+export default config;
 ```
 
-## 🏗️ Development Environment Features
-
-### Entity and Page Selection
-
-The development environment provides:
-
-- **Entity Selector**: Choose between Topic and Location entities
-- **Page Tabs**: Switch between Info and Settings pages  
-- **Slot Visualization**: See Content and Sidebar slots for each combination
-- **Real-time Updates**: Changes reflect immediately
-
-### Component Testing
-
-- **Direct Component Testing**: Test components directly in development mode
-- **Federation Testing**: Test module federation loading in preview mode
-- **Slot Validation**: Visual indicators for provided vs. missing slots
-- **Props Testing**: Pass dynamic props to components
-
-### Development Modes
-
-#### Development Mode (Hot Reload)
-```bash
-npm run dev
-```
-- Direct component imports from source
-- Hot reload on file changes
-- Instant feedback loop
-
-#### Preview Mode (Federation)
-```bash
-npm run build && npm run preview
-```
-- Tests actual module federation
-- Simulates production environment
-- Validates federated component loading
-
-## 🔧 API Reference
-
-### `createPluginDevelopmentEnvironment(config?: PluginDevConfig)`
-
-Creates a Vue application instance configured for plugin development.
-
-**Parameters:**
-- `config` (optional): Development configuration object
-
-**Returns:** Vue application instance
-
-### `PluginDevConfig`
-
-Configuration interface for the development environment:
+### 3. Configure Vite
 
 ```typescript
-interface PluginDevConfig {
-  pluginConfig?: BasePluginConfig;     // Your plugin's configuration
-  components?: Record<string, any>;    // Component map for direct rendering
-  importPaths?: {                      // Custom import paths (future use)
-    configPath?: string;
-    sidebarPath?: string;
-    contentPath?: string;
-  };
-}
-```
-
-### Components
-
-#### `PluginEnvironment`
-Main development interface with entity/page selection and component rendering.
-
-#### `DirectComponent`  
-Renders Vue components directly for development testing.
-
-#### `PluginComponent`
-Loads and renders federated components for integration testing.
-
-## 🎨 Styling and Theming
-
-The SDK includes Tailwind CSS with TopLocs design tokens:
-
-```css
-/* Pre-configured classes available */
-.border-blue-600     /* TopLocs primary blue */
-.text-gray-900       /* Primary text color */
-.bg-green-100        /* Success background */
-.text-green-800      /* Success text */
-```
-
-### Custom Styling
-
-Import your own styles after the SDK styles:
-
-```typescript
-import '@toplocs/plugin-dev-sdk/style.css';
-import './my-custom-styles.css';  // Your overrides
-```
-
-## 🚀 Integration with TopLocs
-
-### Module Federation Setup
-
-Your `vite.config.ts` should expose components for federation:
-
-```typescript
-import federation from "@originjs/vite-plugin-federation";
+// vite.config.ts
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import federation from '@originjs/vite-plugin-federation';
 
 export default defineConfig({
   plugins: [
     vue(),
     federation({
-      name: 'my-plugin',
+      name: 'my-awesome-plugin',
       filename: 'plugin.js',
       exposes: {
-        './PluginConfig': './src/index.ts',
-        './InfoSidebar': './src/views/info/Sidebar.vue',
-        './SettingsContent': './src/views/settings/Content.vue',
+        './TopicContent': './src/components/TopicContent.vue',
+        './TopicSidebar': './src/components/TopicSidebar.vue'
       },
       shared: ['vue', 'vue-router']
     })
@@ -227,154 +105,210 @@ export default defineConfig({
 });
 ```
 
-### Development Workflow
+## 🏗️ Plugin Architecture
 
-1. **Setup**: Install SDK and configure your plugin
-2. **Develop**: Use hot reload mode for rapid iteration
-3. **Test**: Switch to preview mode to test federation
-4. **Integrate**: Test in actual TopLocs environment
-5. **Deploy**: Build and deploy your plugin
+### Slot System
 
-## 📁 Project Structure
+TopLocs plugins integrate into specific "slots" within the platform:
 
-Recommended plugin structure when using the SDK:
+| Entity | Pages | Available Slots |
+|--------|-------|----------------|
+| Topic | Info, Settings | Content, Sidebar |
+| Location | Info, Settings | Content, Sidebar |
 
-```
-my-plugin/
-├── src/                        # Plugin source code
-│   ├── components/            # Plugin components
-│   ├── views/
-│   │   ├── info/
-│   │   │   └── Sidebar.vue   # Info page sidebar
-│   │   └── settings/
-│   │       └── Content.vue   # Settings page content
-│   └── index.ts              # Plugin configuration
-├── dev/                       # Development files (optional)
-├── index.ts                   # Development entry point
-├── index.html                 # Development HTML
-├── package.json
-├── vite.config.ts
-└── tailwind.config.js
-```
+### Component Props
 
-## 🔧 Development Scripts
+Every plugin component receives standardized props:
 
-Add these scripts to your plugin's `package.json`:
-
-```json
-{
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build", 
-    "preview": "vite preview",
-    "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --fix"
-  }
+```typescript
+interface PluginComponentProps {
+  parentId: string;      // ID of the parent entity (topic/location)
+  query: LocationQuery;  // Route query parameters
 }
 ```
 
-## 🤝 Contributing
+### Example Component
 
-We welcome contributions to the TopLocs Plugin Development SDK!
+```vue
+<template>
+  <div class="plugin-content">
+    <h2>{{ title }}</h2>
+    <p>Viewing {{ entityType }} with ID: {{ parentId }}</p>
+  </div>
+</template>
 
-### Development Setup
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps<{
+  parentId: string;
+  query: Record<string, any>;
+}>();
+
+const entityType = computed(() => 
+  props.parentId.startsWith('topic-') ? 'Topic' : 'Location'
+);
+
+const title = computed(() => 
+  `My Plugin - ${entityType.value}`
+);
+</script>
+```
+
+## 🛠️ Development Workflow
+
+### Development Mode
 
 ```bash
-# Clone the repository
-git clone https://github.com/toplocs/plugin-dev-sdk.git
-cd plugin-dev-sdk
-
-# Install dependencies
-npm install
-
-# Start development
 npm run dev
-
-# Build for testing
-npm run build
 ```
 
-### Contribution Guidelines
+- Starts development server with HMR
+- Visual environment at `http://localhost:5173`
+- Instant component updates
+- Vue DevTools support
 
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m 'Add amazing feature'`
-4. **Push** to the branch: `git push origin feature/amazing-feature`
-5. **Open** a Pull Request
+### Preview Mode
 
-## 📝 Examples
+```bash
+npm run build
+npm run preview
+```
 
-### Link Plugin Example
+- Tests production build
+- Module Federation enabled
+- Simulates real plugin loading
 
-See the [link-plugin](https://github.com/toplocs/link-plugin) for a complete example of SDK integration.
+### Development Environment Features
 
-### Minimal Plugin Example
+The SDK provides a visual development environment with:
+
+- **Entity Selector**: Switch between Topic/Location contexts
+- **Page Navigation**: Test different page contexts (Info/Settings)
+- **Slot Visualization**: See how your components fit
+- **Live Reload**: Instant updates as you code
+
+## 📚 API Reference
+
+### Main Functions
+
+#### `createPluginDevelopmentEnvironment(config)`
+
+Creates a Vue application configured for plugin development.
 
 ```typescript
-// Minimal plugin setup
-import { createPluginDevelopmentEnvironment } from '@toplocs/plugin-dev-sdk';
-import '@toplocs/plugin-dev-sdk/style.css';
-
-const app = createPluginDevelopmentEnvironment({
-  pluginConfig: {
-    id: 'simple_plugin',
-    name: 'Simple Plugin',
-    url: 'http://localhost:3006/assets/plugin.js',
-    slots: [
-      { entity: 'Topic', page: 'Info', slot: 'Sidebar', component: 'HelloWorld' }
-    ]
-  },
-  components: {
-    HelloWorld: { template: '<div>Hello from my plugin!</div>' }
-  }
-});
-
-app.mount('#app');
+function createPluginDevelopmentEnvironment(config: PluginDevConfig): App<Element>
 ```
 
-## 🐛 Troubleshooting
+**Parameters:**
+- `config.pluginConfig`: Your plugin configuration
+- `config.components`: Map of component names to Vue components
+- `config.importPaths`: (Optional) Custom import paths
+
+**Returns:** Configured Vue application instance
+
+### TypeScript Types
+
+```typescript
+export interface BasePluginConfig {
+  id: string;
+  name: string;
+  url: string;
+  version?: string;
+  description?: string;
+  author?: string;
+  slots: PluginSlot[];
+}
+
+export interface PluginSlot {
+  entity: 'Topic' | 'Location';
+  page: 'Info' | 'Settings';
+  slot: 'Content' | 'Sidebar';
+  component: string;
+}
+
+export interface PluginDevConfig {
+  pluginConfig?: BasePluginConfig;
+  components?: Record<string, any>;
+  importPaths?: {
+    configPath?: string;
+    sidebarPath?: string;
+    contentPath?: string;
+  };
+}
+```
+
+### Exported Components
+
+- `PluginEnvironment`: Main development environment component
+- `DirectComponent`: Direct component renderer (dev mode)
+- `PluginComponent`: Federation component loader (preview mode)
+
+## 🎯 Best Practices
+
+1. **Component Organization**
+   ```
+   src/
+   ├── components/
+   │   ├── TopicContent.vue
+   │   ├── TopicSidebar.vue
+   │   └── shared/
+   ├── plugin.config.ts
+   └── dev.ts
+   ```
+
+2. **State Management**
+   - Use Vue 3 Composition API
+   - Leverage `provide/inject` for plugin-wide state
+   - Keep components self-contained
+
+3. **Styling**
+   - Use Tailwind classes for consistency
+   - Scope custom styles to avoid conflicts
+   - Follow TopLocs design system
+
+4. **Performance**
+   - Lazy load heavy components
+   - Optimize bundle size
+   - Use Vue's async components
+
+## 🔧 Troubleshooting
 
 ### Common Issues
 
-**Federation not working?**
-- Ensure `@originjs/vite-plugin-federation` is installed in your plugin
-- Check that components are properly exposed in vite.config.ts
-- Verify the plugin URL is accessible
-
-**Styles not loading?**
-- Import SDK styles: `import '@toplocs/plugin-dev-sdk/style.css'`
-- Check Tailwind configuration includes the SDK dist files
-
-**TypeScript errors?**
-- Ensure you're using the exported interfaces
-- Check that component props are properly typed
-
-### Debug Mode
-
-Enable debug logging:
-
-```typescript
-// Add to your development setup
-localStorage.setItem('toplocs-debug', 'true');
+**Module Federation Errors**
+```bash
+# Clear cache and rebuild
+rm -rf node_modules/.vite
+npm run build
 ```
 
-## 📚 Related Resources
+**Type Errors**
+```bash
+# Ensure TypeScript is configured correctly
+npm run type-check
+```
 
-- [TopLocs Documentation](https://toplocs.github.io/toplocs-workspace/)
-- [Plugin Development Guide](https://github.com/toplocs/toplocs-workspace)
-- [Module Federation Docs](https://module-federation.github.io/)
-- [Vue 3 Documentation](https://vuejs.org/)
+**HMR Not Working**
+- Check Vite config
+- Ensure components are properly exported
+- Verify dev server is running
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
-MIT License - see the [LICENSE](LICENSE) file for details.
+MIT © TopLocs Team
 
-## 🏷️ Changelog
+## 🔗 Links
 
-### v1.0.0
-- Initial release
-- Vue 3 + TypeScript support
-- Module federation integration
-- Entity/page/slot architecture
-- Tailwind CSS styling
-- Hot reload development
+- [TopLocs Platform](https://github.com/toplocs/tribelike)
+- [Plugin Examples](https://github.com/toplocs/demo-plugin)
+- [Documentation](https://toplocs.github.io/toplocs-workspace/)
+- [NPM Package](https://www.npmjs.com/package/@toplocs/plugin-sdk)
+
+---
+
+Made with ❤️ by the TopLocs team

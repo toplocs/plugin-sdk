@@ -9,7 +9,7 @@
       />
       <div v-else>
         <i class="text-sm text-gray-400">
-          {{ plugin.name }} is not available
+          {{ plugin?.name || 'Plugin' }} is not available
         </i>
       </div>
     </template>
@@ -42,10 +42,15 @@ const loadFederationMethods = async () => {
 import { onMounted, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 
-const props = defineProps({
-  plugin: Object,
-  position: String,
-});
+interface Props {
+  plugin?: {
+    name: string;
+    url: string;
+  };
+  position?: string;
+}
+
+const props = defineProps<Props>();
 const route = useRoute();
 const RemoteComponent = shallowRef();
 

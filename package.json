@@ -1,7 +1,21 @@
 {
-  "name": "@toplocs/plugin-dev-sdk",
+  "name": "@toplocs/plugin-sdk",
   "version": "1.0.0",
-  "description": "Development SDK for TopLocs plugins",
+  "description": "Official SDK for developing plugins for the TopLocs decentralized community platform",
+  "keywords": ["toplocs", "plugin", "sdk", "vue", "typescript", "module-federation"],
+  "homepage": "https://github.com/toplocs/plugin-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/toplocs/plugin-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:toplocs/plugin-sdk.git"
+  },
+  "license": "MIT",
+  "author": "TopLocs Team",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -20,7 +34,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --noEmitOnError false",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "vue": "^3.0.0",

@@ -1,0 +1,24 @@
+# Source files
+src/
+*.vue
+*.ts
+!dist/**/*.d.ts
+
+# Config files
+vite.config.ts
+tsconfig.json
+tailwind.config.js
+postcss.config.js
+
+# Development files
+.git/
+.gitignore
+node_modules/
+*.log
+.DS_Store
+
+# Documentation source
+CONTRIBUTING.md
+
+# Build artifacts not needed
+*.map

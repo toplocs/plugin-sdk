@@ -166,7 +166,7 @@ const getSlotComponent = (entity: string, page: string, slot: string) => {
   
   if (!matchingSlot) return null;
   
-  return components.value[matchingSlot.component];
+  return (components.value as Record<string, any>)[matchingSlot.component];
 };
 
 const getSlotComponentName = (entity: string, page: string, slot: string) => {
